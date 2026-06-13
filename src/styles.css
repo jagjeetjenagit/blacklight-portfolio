@@ -58,7 +58,8 @@ body.has-cursor,body.has-cursor *{cursor:none!important}
   position:fixed;top:0;left:0;width:100vw;height:100vh;
   z-index:9995;pointer-events:none;mix-blend-mode:screen;
 }
-@media (hover:none),(pointer:coarse){.cursor,.cursor-trail,.cursor-glow,.cursor-canvas{display:none}}
+/* touch keeps the spark trail (canvas) but drops the desktop cursor bits */
+@media (hover:none),(pointer:coarse){.cursor,.cursor-trail,.cursor-glow{display:none}}
 
 /* ============ ATMOSPHERE ============ */
 .particles{position:fixed;inset:0;z-index:0;pointer-events:none}

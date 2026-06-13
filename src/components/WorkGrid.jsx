@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { isTouch } from '../hooks'
+import { focusFX, setFocusTarget } from '../fx'
 import { PROJECTS } from '../data/projects'
 import Reveal from './Reveal'
 import VideoControls from './VideoControls'
@@ -16,7 +17,8 @@ function WorkCard({ project, index }) {
     const el = cardRef.current
     const v = videoRef.current
 
-    // "live" mirrors real playback, however it was started
+    // "live" mirrors real playback, however it was started (hover, or the
+    // centered-card controller on touch)
     const onPlay = () => setLive(true)
     const onPause = () => setLive(false)
     v.addEventListener('play', onPlay)
@@ -33,25 +35,14 @@ function WorkCard({ project, index }) {
     )
     reveal.observe(el)
 
-    // touch devices have no hover: play while the card fills the viewport
-    let io
-    if (isTouch()) {
-      io = new IntersectionObserver(
-        ([e]) => (e.intersectionRatio >= 0.55 ? v.play().catch(() => {}) : v.pause()),
-        { threshold: [0, 0.55, 1] },
-      )
-      io.observe(el)
-    }
-
     return () => {
       reveal.disconnect()
-      io?.disconnect()
       v.removeEventListener('play', onPlay)
       v.removeEventListener('pause', onPause)
     }
   }, [])
 
-  // 3D tilt + glare tracking the pointer
+  // 3D tilt + glare tracking the pointer (desktop)
   const onMouseMove = (e) => {
     if (isTouch()) return
     const el = mediaRef.current
@@ -72,7 +63,8 @@ function WorkCard({ project, index }) {
       data-cursor="video"
       onMouseMove={onMouseMove}
       onMouseEnter={() => {
-        if (!userPaused.current) videoRef.current?.play().catch(() => {})
+        if (isTouch() || userPaused.current) return
+        videoRef.current?.play().catch(() => {})
       }}
       onMouseLeave={() => {
         if (isTouch()) return
@@ -100,8 +92,53 @@ function WorkCard({ project, index }) {
 }
 
 export default function WorkGrid() {
+  const sectionRef = useRef(null)
+
+  // On touch there's no hover, so play only the card nearest the screen
+  // centre — one at a time — and aim the particle drain at it so the
+  // energy-absorb + bursts happen as you scroll.
+  useEffect(() => {
+    if (!isTouch()) return
+    const root = sectionRef.current
+    let ticking = false
+
+    const update = () => {
+      ticking = false
+      const cy = innerHeight * 0.5
+      const cards = [...root.querySelectorAll('.work')]
+      let best = null
+      let bestDist = Infinity
+      for (const card of cards) {
+        const r = card.querySelector('.work-media').getBoundingClientRect()
+        const visible = r.bottom > innerHeight * 0.12 && r.top < innerHeight * 0.88
+        if (!visible) continue
+        const dist = Math.abs((r.top + r.bottom) / 2 - cy)
+        if (dist < bestDist) { bestDist = dist; best = card }
+      }
+      for (const card of cards) {
+        const v = card.querySelector('video')
+        if (!v) continue
+        if (card === best) { if (v.paused) v.play().catch(() => {}) }
+        else if (!v.paused) v.pause()
+      }
+      if (best) setFocusTarget(best.querySelector('.work-media'))
+      else focusFX.active = false
+    }
+
+    const onScroll = () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update) }
+    }
+    addEventListener('scroll', onScroll, { passive: true })
+    const t = setTimeout(update, 400)
+    return () => {
+      removeEventListener('scroll', onScroll)
+      clearTimeout(t)
+      focusFX.active = false
+    }
+  }, [])
+
   return (
-    <section id="work">
+    <section id="work" ref={sectionRef}>
       <div className="sec-head">
         <Reveal as="h2" className="sec-title">SELECTED <em>work</em></Reveal>
         <Reveal className="sec-tag">{String(PROJECTS.length).padStart(2, '0')} PROJECTS</Reveal>

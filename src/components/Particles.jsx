@@ -231,10 +231,13 @@ function Rig() {
 }
 
 export default function Particles() {
-  // phones get a lighter field (fewer points, lower pixel ratio) so the
-  // atmosphere still reads as magical without taxing mobile GPUs
+  // phones get fewer points + lower pixel ratio for performance, but each
+  // point is bigger and brighter so the field still reads clearly on a
+  // small screen (it looked faint before)
   const mobile = typeof window !== 'undefined' && window.innerWidth < 760
-  const f = mobile ? 0.34 : 1
+  const f = mobile ? 0.5 : 1     // count factor
+  const sz = mobile ? 1.7 : 1    // size boost
+  const op = mobile ? 1.8 : 1    // opacity boost
   const n = (x) => Math.round(x * f)
 
   return (
@@ -246,11 +249,11 @@ export default function Particles() {
       >
         <Rig />
         {/* fine magical dust */}
-        <Dust count={n(1100)} size={0.045} spread={16} depth={7} speed={0.014} opacity={0.5} color="#bfe0ff" warpSpeed={1.4} />
+        <Dust count={n(1100)} size={0.045 * sz} spread={16} depth={7} speed={0.014} opacity={0.5 * op} color="#bfe0ff" warpSpeed={1.4} />
         {/* drifting fireflies */}
-        <Dust count={n(70)} size={0.32} spread={14} depth={6} speed={-0.02} opacity={0.28} color="#9fd4ff" warpSpeed={1.0} />
+        <Dust count={n(70)} size={0.32 * sz} spread={14} depth={6} speed={-0.02} opacity={0.28 * op} color="#9fd4ff" warpSpeed={1.0} />
         {/* large out-of-focus bokeh orbs */}
-        <Dust count={n(14)} size={1.6} spread={13} depth={5} speed={0.01} opacity={0.1} color="#7ab8ff" warpSpeed={0.55} />
+        <Dust count={n(14)} size={1.6 * sz} spread={13} depth={5} speed={0.01} opacity={0.1 * op} color="#7ab8ff" warpSpeed={0.55} />
         <Bursts />
       </Canvas>
     </div>

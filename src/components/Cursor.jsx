@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { isTouch, isReduced } from '../hooks'
-import { focusFX } from '../fx'
+import { focusFX, setFocusTarget } from '../fx'
 
 const SPARK_COLORS = ['#bfe0ff', '#dff3ff', '#9fd4ff', '#7ad0ff']
 
@@ -10,13 +10,8 @@ function rgba(hex, a) {
 }
 
 /*
- * Four layers:
- *  - dot: pinned to the pointer
- *  - ring: lerped trail that stretches with velocity, morphs into a
- *    "PLAY" disc over videos and a solid disc over links
- *  - glow: slow icy halo dragging behind
- *  - canvas: wand-trail of glowing sparks that scatter and fade
- *    (suppressed while hovering videos so footage stays clean)
+ * Desktop: dot + lerped ring + icy glow + a wand-trail of glowing sparks.
+ * Touch:   just the spark trail, emitted under the moving finger.
  */
 export default function Cursor() {
   const dot = useRef(null)
@@ -26,8 +21,9 @@ export default function Cursor() {
   const [label, setLabel] = useState('PLAY')
 
   useEffect(() => {
-    if (isTouch() || isReduced()) return
-    document.body.classList.add('has-cursor')
+    if (isReduced()) return
+    const touch = isTouch()
+    if (!touch) document.body.classList.add('has-cursor')
 
     const cv = canvasRef.current
     const ctx = cv.getContext('2d')
@@ -42,46 +38,24 @@ export default function Cursor() {
     resize()
     addEventListener('resize', resize)
 
-    let mx = innerWidth / 2, my = innerHeight / 2
-    let tx = mx, ty = my, gx = mx, gy = my, px = mx, py = my
-    let raf
     const sparks = []
-
-    const onMove = (e) => {
-      mx = e.clientX
-      my = e.clientY
-      dot.current.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`
-      if (!ring.current.classList.contains('is-video')) {
-        for (let i = 0; i < 2; i++) {
-          sparks.push({
-            x: mx + (Math.random() - 0.5) * 8,
-            y: my + (Math.random() - 0.5) * 8,
-            vx: (Math.random() - 0.5) * 1.3,
-            vy: (Math.random() - 0.5) * 1.3 - 0.3,
-            r: Math.random() * 1.7 + 0.7,
-            life: 1,
-            decay: Math.random() * 0.024 + 0.016,
-            c: Math.random() < 0.1 ? '#e8c882' : SPARK_COLORS[(Math.random() * SPARK_COLORS.length) | 0],
-          })
-        }
-        if (sparks.length > 240) sparks.splice(0, sparks.length - 240)
+    const emit = (x, y, count, scatter) => {
+      for (let i = 0; i < count; i++) {
+        sparks.push({
+          x: x + (Math.random() - 0.5) * scatter,
+          y: y + (Math.random() - 0.5) * scatter,
+          vx: (Math.random() - 0.5) * 1.3,
+          vy: (Math.random() - 0.5) * 1.3 - 0.3,
+          r: Math.random() * 1.7 + 0.7,
+          life: 1,
+          decay: Math.random() * 0.024 + 0.016,
+          c: Math.random() < 0.1 ? '#e8c882' : SPARK_COLORS[(Math.random() * SPARK_COLORS.length) | 0],
+        })
       }
+      if (sparks.length > 280) sparks.splice(0, sparks.length - 280)
     }
 
-    const loop = () => {
-      tx += (mx - tx) * 0.16
-      ty += (my - ty) * 0.16
-      gx += (mx - gx) * 0.055
-      gy += (my - gy) * 0.055
-      const vx = tx - px, vy = ty - py
-      px = tx; py = ty
-      const stretch = Math.min(Math.hypot(vx, vy) / 36, 0.32)
-      const ang = Math.atan2(vy, vx)
-      ring.current.style.transform =
-        `translate(${tx}px,${ty}px) translate(-50%,-50%) ` +
-        `rotate(${ang}rad) scale(${1 + stretch},${1 - stretch}) rotate(${-ang}rad)`
-      glow.current.style.transform = `translate(${gx}px,${gy}px) translate(-50%,-50%)`
-
+    const drawSparks = () => {
       ctx.clearRect(0, 0, innerWidth, innerHeight)
       ctx.globalCompositeOperation = 'lighter'
       for (let i = sparks.length - 1; i >= 0; i--) {
@@ -101,6 +75,53 @@ export default function Cursor() {
         ctx.arc(s.x, s.y, halo, 0, Math.PI * 2)
         ctx.fill()
       }
+    }
+
+    let raf
+
+    /* ---------------- TOUCH: finger-trail sparks only ---------------- */
+    if (touch) {
+      const onTouch = (e) => {
+        const t = e.touches[0]
+        if (t) emit(t.clientX, t.clientY, 3, 12)
+      }
+      addEventListener('touchstart', onTouch, { passive: true })
+      addEventListener('touchmove', onTouch, { passive: true })
+      const loop = () => { drawSparks(); raf = requestAnimationFrame(loop) }
+      raf = requestAnimationFrame(loop)
+      return () => {
+        cancelAnimationFrame(raf)
+        removeEventListener('resize', resize)
+        removeEventListener('touchstart', onTouch)
+        removeEventListener('touchmove', onTouch)
+      }
+    }
+
+    /* ---------------- DESKTOP: full custom cursor ---------------- */
+    let mx = innerWidth / 2, my = innerHeight / 2
+    let tx = mx, ty = my, gx = mx, gy = my, px = mx, py = my
+
+    const onMove = (e) => {
+      mx = e.clientX
+      my = e.clientY
+      dot.current.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`
+      if (!ring.current.classList.contains('is-video')) emit(mx, my, 2, 8)
+    }
+
+    const loop = () => {
+      tx += (mx - tx) * 0.16
+      ty += (my - ty) * 0.16
+      gx += (mx - gx) * 0.055
+      gy += (my - gy) * 0.055
+      const vx = tx - px, vy = ty - py
+      px = tx; py = ty
+      const stretch = Math.min(Math.hypot(vx, vy) / 36, 0.32)
+      const ang = Math.atan2(vy, vx)
+      ring.current.style.transform =
+        `translate(${tx}px,${ty}px) translate(-50%,-50%) ` +
+        `rotate(${ang}rad) scale(${1 + stretch},${1 - stretch}) rotate(${-ang}rad)`
+      glow.current.style.transform = `translate(${gx}px,${gy}px) translate(-50%,-50%)`
+      drawSparks()
       raf = requestAnimationFrame(loop)
     }
 
@@ -108,16 +129,13 @@ export default function Cursor() {
       const vid = e.target.closest?.('[data-cursor="video"]')
       const link = e.target.closest?.('a,button,.btn,.srv')
       ring.current.classList.toggle('is-video', !!vid && !link)
-      ring.current.classList.toggle('is-link', !!link || (!vid && false))
-      if (vid) {
+      ring.current.classList.toggle('is-link', !!link)
+      if (vid && !link) {
         setLabel(vid.dataset.cursorLabel || 'PLAY')
-        const r = vid.getBoundingClientRect()
-        focusFX.nx = ((r.left + r.width / 2) / innerWidth) * 2 - 1
-        focusFX.ny = -(((r.top + r.height / 2) / innerHeight) * 2 - 1)
-        focusFX.rw = r.width / innerWidth
-        focusFX.rh = r.height / innerHeight
+        setFocusTarget(vid)
+      } else {
+        focusFX.active = false
       }
-      focusFX.active = !!vid
     }
 
     addEventListener('mousemove', onMove)

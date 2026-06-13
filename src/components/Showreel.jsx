@@ -20,6 +20,19 @@ export default function Showreel() {
     return () => v.removeEventListener('loadeddata', tryPlay)
   }, [idx])
 
+  // on touch, only play while the reel is on screen (battery + "one at a time")
+  useEffect(() => {
+    if (!isTouch()) return
+    const el = reelRef.current
+    const v = videoRef.current
+    const io = new IntersectionObserver(
+      ([e]) => (e.isIntersecting ? v.play().catch(() => {}) : v.pause()),
+      { threshold: 0.45 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
   // cinematic tilt: the whole frame leans and the footage pans toward the pointer
   const onMouseMove = (e) => {
     if (isTouch()) return
