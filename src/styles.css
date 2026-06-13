@@ -103,6 +103,10 @@ body.has-cursor,body.has-cursor *{cursor:none!important}
 .pre-label b{font-weight:300;opacity:0;transform:translateY(12px);display:inline-block;
   animation:lrise .7s var(--ease) forwards}
 @keyframes lrise{to{opacity:1;transform:none}}
+.pre-sub{
+  margin-top:18px;font-family:var(--display);font-weight:300;
+  font-size:9px;letter-spacing:.45em;color:var(--blue);text-transform:uppercase;
+}
 .pre-bar{
   position:absolute;left:50%;bottom:-46px;transform:translateX(-50%);
   width:min(280px,60vw);height:1px;background:var(--line);
@@ -130,7 +134,12 @@ body.loaded nav{opacity:1;transform:none}
 .nav-links a{position:relative;padding:4px 0}
 .nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:#fff;transform:scaleX(0);transform-origin:right;transition:transform .5s var(--ease)}
 .nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
-@media(max-width:640px){.nav-links{display:none}}
+@media(max-width:640px){
+  nav{padding:18px 20px}
+  .logo{font-size:11px}
+  .logo em{display:none}
+  .nav-links{gap:18px;font-size:8px;letter-spacing:.2em}
+}
 
 /* ============ HERO ============ */
 .hero{
@@ -469,6 +478,8 @@ footer .socials a:hover{color:var(--blue)}
 }
 .work:hover .vid-controls,.reel:hover .vid-controls,
 .work-media:fullscreen .vid-controls,.reel:fullscreen .vid-controls{opacity:1;transform:none}
+/* no hover on touch — keep controls visible so videos are operable */
+@media (hover:none),(pointer:coarse){.vid-controls{opacity:1;transform:none}}
 .vid-controls button{
   width:36px;height:36px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
@@ -493,6 +504,31 @@ footer .socials a:hover{color:var(--blue)}
 /* ============ REVEAL ============ */
 .rv{opacity:0;transform:translateY(50px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease)}
 .rv.in-view{opacity:1;transform:none}
+
+/* ============ MOBILE ============ */
+@media(max-width:760px){
+  .hero{padding-top:104px;padding-bottom:48px}
+  /* deepen the wash so the headline stays legible over the footage */
+  .hero-bg::after{
+    background:
+      linear-gradient(180deg,rgba(4,7,15,.65) 0%,rgba(4,7,15,.35) 40%,rgba(4,7,15,.97) 100%),
+      linear-gradient(0deg,rgba(24,58,118,.12),rgba(24,58,118,.12));
+  }
+  .hero-foot{flex-direction:column;align-items:flex-start;gap:26px}
+  .hero-sub{max-width:none}
+  .hero-cta{width:100%}
+  .btn{flex:1;justify-content:center;padding:18px 20px}
+  .sec-head{padding-top:clamp(64px,11vh,110px);padding-bottom:32px}
+  .vid-controls{right:10px;bottom:10px}
+  .vid-controls button{width:42px;height:42px}
+  .work-live-tag{top:10px;right:10px}
+  .stats{grid-template-columns:1fr 1fr}
+  .srv{padding:24px 4px}
+  .fab{right:16px;bottom:16px;padding:15px 22px;font-size:9px}
+}
+@media(max-width:420px){
+  .stats{grid-template-columns:1fr}
+}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}

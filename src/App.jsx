@@ -1,5 +1,7 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
-import { useSmoothScroll, isTouch, isReduced } from './hooks'
+import { useSmoothScroll, isReduced } from './hooks'
+import { SECONDARY_VIDEOS } from './data/projects'
+import { prefetchSequential } from './preload'
 import Cursor from './components/Cursor'
 
 const Particles = lazy(() => import('./components/Particles'))
@@ -15,12 +17,15 @@ export default function App() {
   useSmoothScroll(smoothRef)
 
   useEffect(() => {
-    setParticles(!isReduced() && !(isTouch() && innerWidth < 760))
+    // keep the magical field on mobile too — it just runs lighter (see Particles)
+    setParticles(!isReduced())
   }, [])
 
   const onPreloadComplete = useCallback(() => {
     document.body.classList.add('loaded')
     setLoaded(true)
+    // warm the work-grid videos in the background so they're ready on scroll
+    prefetchSequential(SECONDARY_VIDEOS)
   }, [])
 
   return (

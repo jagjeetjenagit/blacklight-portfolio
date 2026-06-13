@@ -21,6 +21,14 @@ export const PROJECTS = [
   { title: 'UNSAID LORES',    meta: 'MUSIC FILM / 2026',    tag: 'PERFORMANCE',    src: assetUrl('special/singing_ad.mp4') },
 ]
 
+// Videos visible the moment the site opens (hero background + showreel).
+// The loader downloads these before revealing the page.
+export const CRITICAL_VIDEOS = SHOWREEL
+
+// Everything else, warmed in the background after entry so the work grid
+// is cached by the time the visitor scrolls to it.
+export const SECONDARY_VIDEOS = PROJECTS.map((p) => p.src)
+
 export const SERVICES = [
   { num: 'i',   title: 'AI FILMS',   desc: 'Cinematic AI-generated films — pre-wedding stories, short films and concept reels rendered in 4K.' },
   { num: 'ii',  title: 'VFX & POST', desc: 'Compositing, upscaling, grade and sound design that takes generated footage to broadcast finish.' },

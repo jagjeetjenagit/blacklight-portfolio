@@ -69,8 +69,18 @@ export default function VideoControls({ videoRef, containerRef, mediaKey = 0, on
 
   const toggleFullscreen = (e) => {
     e.stopPropagation()
-    if (document.fullscreenElement) document.exitFullscreen()
-    else containerRef.current?.requestFullscreen?.()
+    const el = containerRef.current
+    const v = videoRef.current
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      (document.exitFullscreen || document.webkitExitFullscreen)?.call(document)
+    } else if (el?.requestFullscreen) {
+      el.requestFullscreen()
+    } else if (el?.webkitRequestFullscreen) {
+      el.webkitRequestFullscreen()
+    } else if (v?.webkitEnterFullscreen) {
+      // iOS Safari: only the <video> element can go fullscreen
+      v.webkitEnterFullscreen()
+    }
   }
 
   return (
