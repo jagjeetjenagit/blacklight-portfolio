@@ -502,6 +502,28 @@ footer .socials a:hover{color:var(--blue)}
 .work-media:fullscreen .ph{display:none}
 .work-media:fullscreen .glare,.reel:fullscreen .glare{display:none}
 
+/* ============ VIDEO LOADING (buffering %) ============ */
+.vid-loading{
+  position:absolute;inset:0;z-index:6;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  background:radial-gradient(closest-side,rgba(4,8,16,.55),rgba(4,8,16,.32));
+  backdrop-filter:blur(2px);
+  animation:vlfade .3s var(--ease);
+}
+@keyframes vlfade{from{opacity:0}to{opacity:1}}
+.vl-ring{width:clamp(46px,7vw,58px);height:clamp(46px,7vw,58px);transform:rotate(-90deg)}
+.vl-ring circle{fill:none;stroke-width:2.6}
+.vl-bg{stroke:rgba(122,208,255,.18)}
+.vl-fg{
+  stroke:var(--blue);stroke-linecap:round;
+  stroke-dasharray:100;transition:stroke-dashoffset .3s linear;
+  filter:drop-shadow(0 0 6px rgba(122,208,255,.7));
+}
+.vid-loading span{
+  font-family:var(--display);font-weight:400;font-size:12px;letter-spacing:.18em;
+  color:var(--ink);text-shadow:0 1px 8px rgba(0,0,0,.6);font-variant-numeric:tabular-nums;
+}
+
 /* ============ REVEAL ============ */
 .rv{opacity:0;transform:translateY(50px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease)}
 .rv.in-view{opacity:1;transform:none}

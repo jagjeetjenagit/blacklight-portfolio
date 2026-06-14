@@ -10,18 +10,44 @@ function WorkCard({ project, index }) {
   const videoRef = useRef(null)
   const mediaRef = useRef(null)
   const userPaused = useRef(false)
+  const showTimer = useRef(null)
   const [revealed, setRevealed] = useState(false)
   const [live, setLive] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [pct, setPct] = useState(0)
 
   useEffect(() => {
     const el = cardRef.current
     const v = videoRef.current
 
+    // download % from the buffered ranges
+    const buffered = () =>
+      v.duration && v.buffered.length
+        ? Math.min(100, Math.round((v.buffered.end(v.buffered.length - 1) / v.duration) * 100))
+        : 0
+
+    // show the loader only if it's still not ready after a short beat, so a
+    // cached/instant video doesn't flash an overlay
+    const clearShow = () => { clearTimeout(showTimer.current); showTimer.current = null }
+    const scheduleShow = () => {
+      if (showTimer.current) return
+      showTimer.current = setTimeout(() => {
+        if (v.readyState < 3) { setPct(buffered()); setLoading(true) }
+      }, 180)
+    }
+
     // "live" mirrors real playback, however it was started (hover, or the
     // centered-card controller on touch)
-    const onPlay = () => setLive(true)
-    const onPause = () => setLive(false)
+    const onPlay = () => { setLive(true); if (v.readyState < 3) scheduleShow() }
+    const onWaiting = () => scheduleShow()
+    const onPlaying = () => { clearShow(); setLoading(false) }
+    const onProgress = () => setPct(buffered())
+    const onPause = () => { setLive(false); clearShow(); setLoading(false) }
+
     v.addEventListener('play', onPlay)
+    v.addEventListener('waiting', onWaiting)
+    v.addEventListener('playing', onPlaying)
+    v.addEventListener('progress', onProgress)
     v.addEventListener('pause', onPause)
 
     const reveal = new IntersectionObserver(
@@ -37,7 +63,11 @@ function WorkCard({ project, index }) {
 
     return () => {
       reveal.disconnect()
+      clearShow()
       v.removeEventListener('play', onPlay)
+      v.removeEventListener('waiting', onWaiting)
+      v.removeEventListener('playing', onPlaying)
+      v.removeEventListener('progress', onProgress)
       v.removeEventListener('pause', onPause)
     }
   }, [])
@@ -76,6 +106,15 @@ function WorkCard({ project, index }) {
         <div className={`ph p${(index % 6) + 1}`}>{project.tag}</div>
         <video ref={videoRef} src={project.src} poster={project.poster} muted loop playsInline preload="metadata" />
         <div className="glare" />
+        {loading && (
+          <div className="vid-loading" aria-hidden="true">
+            <svg className="vl-ring" viewBox="0 0 36 36">
+              <circle className="vl-bg" cx="18" cy="18" r="16" pathLength="100" />
+              <circle className="vl-fg" cx="18" cy="18" r="16" pathLength="100" style={{ strokeDashoffset: 100 - pct }} />
+            </svg>
+            <span>{pct}%</span>
+          </div>
+        )}
         <div className="work-live-tag"><i /> PLAYING</div>
         <VideoControls
           videoRef={videoRef}
