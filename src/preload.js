@@ -41,6 +41,15 @@ export function preloadVideo(url, onProgress, timeout = 20000) {
   })
 }
 
+// Preload an image (poster thumbnail). Resolves on load or error.
+export function preloadImage(url) {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = img.onerror = () => resolve()
+    img.src = url
+  })
+}
+
 // Warm a list of videos one at a time in the background (after the site has
 // already revealed) so they're cached by the time the user scrolls to them,
 // without saturating bandwidth up front.

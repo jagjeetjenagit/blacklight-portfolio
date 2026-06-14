@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { isReduced } from '../hooks'
-import { CRITICAL_VIDEOS } from '../data/projects'
-import { preloadVideo } from '../preload'
+import { CRITICAL_VIDEOS, POSTERS } from '../data/projects'
+import { preloadVideo, preloadImage } from '../preload'
 
 // Holds the page until the hero + showreel videos are actually downloaded,
 // showing real progress. A hard MAX cap guarantees entry even on slow links.
@@ -14,6 +14,10 @@ export default function Preloader({ onComplete }) {
   const [gone, setGone] = useState(false)
 
   useEffect(() => {
+    // all poster thumbnails are tiny — fetch them up front so every work
+    // card shows a still the instant the site reveals (no blank dark boxes)
+    POSTERS.forEach((u) => preloadImage(u))
+
     if (isReduced()) {
       // honour reduced-motion: skip the show, but still kick off downloads
       CRITICAL_VIDEOS.forEach((u) => preloadVideo(u))

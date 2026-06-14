@@ -8,22 +8,26 @@ export const SHOWREEL = [
 ]
 
 export const PROJECTS = [
-  { title: 'IRON ENERGY',     meta: 'ENERGY DRINK / 2026',  tag: 'COMMERCIAL',     src: assetUrl('ironenergy_ad.mp4') },
-  { title: 'CHROME VELOCITY', meta: 'AUTOMOTIVE / 2026',    tag: 'CAR FILM',       src: assetUrl('commercial/car_ad.mp4') },
-  { title: 'SILK & STEAM',    meta: 'HAIRCARE / 2026',      tag: 'BEAUTY SPOT',    src: assetUrl('commercial/shampoo_ad.compressed.mp4') },
-  { title: 'STRIDE THEORY',   meta: 'FOOTWEAR / 2026',      tag: 'SNEAKER DROP',   src: assetUrl('commercial/shoes_Ad.mp4') },
-  { title: 'SKYLINE ESTATES', meta: 'REAL ESTATE / 2026',   tag: 'PROPERTY FILM',  src: assetUrl('commercial/property_ad.mp4') },
-  { title: 'ROUGE NOIR',      meta: 'COSMETICS / 2026',     tag: 'LIPSTICK',       src: assetUrl('products/lipstick_ad.mp4') },
-  { title: 'AURUM',           meta: 'JEWELLERY / 2026',     tag: 'NECKLACE',       src: assetUrl('products/necklace_ad.mp4') },
-  { title: 'BLACKOUT LENS',   meta: 'EYEWEAR / 2026',       tag: 'SUNGLASSES',     src: assetUrl('products/sunglasses_ad.mp4') },
-  { title: 'TEMPO',           meta: 'HOROLOGY / 2026',      tag: 'WATCH FILM',     src: assetUrl('products/watch_ad.mp4') },
-  { title: 'DREAM ENGINE',    meta: 'ANIMATION / 2026',     tag: 'ANIMATED SHORT', src: assetUrl('special/animation_ad.mp4') },
-  { title: 'UNSAID LORES',    meta: 'MUSIC FILM / 2026',    tag: 'PERFORMANCE',    src: assetUrl('special/singing_ad.mp4') },
+  { title: 'IRON ENERGY',     meta: 'ENERGY DRINK / 2026',  tag: 'COMMERCIAL',     src: assetUrl('ironenergy_ad.mp4'),                 poster: assetUrl('posters/ironenergy_ad.jpg') },
+  { title: 'CHROME VELOCITY', meta: 'AUTOMOTIVE / 2026',    tag: 'CAR FILM',       src: assetUrl('commercial/car_ad.mp4'),             poster: assetUrl('posters/car_ad.jpg') },
+  { title: 'SILK & STEAM',    meta: 'HAIRCARE / 2026',      tag: 'BEAUTY SPOT',    src: assetUrl('commercial/shampoo_ad.compressed.mp4'), poster: assetUrl('posters/shampoo_ad.jpg') },
+  { title: 'STRIDE THEORY',   meta: 'FOOTWEAR / 2026',      tag: 'SNEAKER DROP',   src: assetUrl('commercial/shoes_Ad.mp4'),           poster: assetUrl('posters/shoes_ad.jpg') },
+  { title: 'SKYLINE ESTATES', meta: 'REAL ESTATE / 2026',   tag: 'PROPERTY FILM',  src: assetUrl('commercial/property_ad.mp4'),        poster: assetUrl('posters/property_ad.jpg') },
+  { title: 'ROUGE NOIR',      meta: 'COSMETICS / 2026',     tag: 'LIPSTICK',       src: assetUrl('products/lipstick_ad.mp4'),          poster: assetUrl('posters/lipstick_ad.jpg') },
+  { title: 'AURUM',           meta: 'JEWELLERY / 2026',     tag: 'NECKLACE',       src: assetUrl('products/necklace_ad.mp4'),          poster: assetUrl('posters/necklace_ad.jpg') },
+  { title: 'BLACKOUT LENS',   meta: 'EYEWEAR / 2026',       tag: 'SUNGLASSES',     src: assetUrl('products/sunglasses_ad.mp4'),        poster: assetUrl('posters/sunglasses_ad.jpg') },
+  { title: 'TEMPO',           meta: 'HOROLOGY / 2026',      tag: 'WATCH FILM',     src: assetUrl('products/watch_ad.mp4'),             poster: assetUrl('posters/watch_ad.jpg') },
+  { title: 'DREAM ENGINE',    meta: 'ANIMATION / 2026',     tag: 'ANIMATED SHORT', src: assetUrl('special/animation_ad.mp4'),          poster: assetUrl('posters/animation_ad.jpg') },
+  { title: 'UNSAID LORES',    meta: 'MUSIC FILM / 2026',    tag: 'PERFORMANCE',    src: assetUrl('special/singing_ad.mp4'),            poster: assetUrl('posters/singing_ad.jpg') },
 ]
 
 // Videos visible the moment the site opens (hero background + showreel).
 // The loader downloads these before revealing the page.
 export const CRITICAL_VIDEOS = SHOWREEL
+
+// Poster stills for the work grid — tiny, downloaded by the loader so every
+// card shows a thumbnail instantly (the video then streams on demand).
+export const POSTERS = PROJECTS.map((p) => p.poster)
 
 // Everything else, warmed in the background after entry so the work grid
 // is cached by the time the visitor scrolls to it.

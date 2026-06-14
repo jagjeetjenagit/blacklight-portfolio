@@ -74,7 +74,7 @@ function WorkCard({ project, index }) {
     >
       <div className="work-media" ref={mediaRef}>
         <div className={`ph p${(index % 6) + 1}`}>{project.tag}</div>
-        <video ref={videoRef} src={project.src} muted loop playsInline preload="metadata" />
+        <video ref={videoRef} src={project.src} poster={project.poster} muted loop playsInline preload="metadata" />
         <div className="glare" />
         <div className="work-live-tag"><i /> PLAYING</div>
         <VideoControls
