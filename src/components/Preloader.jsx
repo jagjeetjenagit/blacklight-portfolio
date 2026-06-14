@@ -42,10 +42,10 @@ export default function Preloader({ onComplete }) {
     const tick = () => {
       const elapsed = performance.now() - t0
       const real = progress.reduce((a, b) => a + b, 0) / CRITICAL_VIDEOS.length
-      // a gentle time-based floor so the counter always creeps upward,
-      // even in the moment before the first byte/Content-Length arrives
-      const floor = Math.min(elapsed / 4000, 0.85)
-      let shown = Math.max(real, floor)
+      // smooth time curve that keeps creeping (eases toward ~0.97 over ~8s)
+      // so the counter never parks at a flat number while the video buffers
+      const timeCurve = (1 - Math.pow(1 - Math.min(elapsed / 8000, 1), 2)) * 0.97
+      let shown = Math.max(real, timeCurve)
 
       const finished = (realDone && elapsed > MIN_MS) || elapsed > MAX_MS
       if (!finished) shown = Math.min(shown, 0.99)

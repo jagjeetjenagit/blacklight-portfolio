@@ -25,7 +25,9 @@ export function preloadVideo(url, onProgress, timeout = 20000) {
       resolve()
     }
 
-    v.addEventListener('canplaythrough', finish, { once: true })
+    // "canplay" = enough buffered to start (loops keep buffering after) —
+    // much faster to fire than canplaythrough, so the loader doesn't stall
+    v.addEventListener('canplay', finish, { once: true })
     v.addEventListener('error', finish, { once: true })
     v.addEventListener('progress', () => {
       try {

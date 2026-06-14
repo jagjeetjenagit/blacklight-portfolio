@@ -21,17 +21,21 @@ export const PROJECTS = [
   { title: 'UNSAID LORES',    meta: 'MUSIC FILM / 2026',    tag: 'PERFORMANCE',    src: assetUrl('special/singing_ad.mp4'),            poster: assetUrl('posters/singing_ad.jpg') },
 ]
 
-// Videos visible the moment the site opens (hero background + showreel).
-// The loader downloads these before revealing the page.
-export const CRITICAL_VIDEOS = SHOWREEL
+// Only the hero background video gates the loader — keep the wait short.
+// (SHOWREEL[1] is what the hero plays.)
+export const CRITICAL_VIDEOS = [SHOWREEL[1]]
 
 // Poster stills for the work grid — tiny, downloaded by the loader so every
 // card shows a thumbnail instantly (the video then streams on demand).
 export const POSTERS = PROJECTS.map((p) => p.poster)
 
-// Everything else, warmed in the background after entry so the work grid
-// is cached by the time the visitor scrolls to it.
-export const SECONDARY_VIDEOS = PROJECTS.map((p) => p.src)
+// Warmed in the background after entry: the rest of the showreel, then the
+// work grid — cached by the time the visitor scrolls to them.
+export const SECONDARY_VIDEOS = [
+  SHOWREEL[0],
+  SHOWREEL[2],
+  ...PROJECTS.map((p) => p.src),
+]
 
 export const SERVICES = [
   { num: 'i',   title: 'AI FILMS',   desc: 'Cinematic AI-generated films — pre-wedding stories, short films and concept reels rendered in 4K.' },
