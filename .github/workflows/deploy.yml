@@ -34,6 +34,9 @@ jobs:
       - name: Build site
         run: npm run build
 
+      - name: Bind custom domain
+        run: echo "blacklightmotion.com" > dist/CNAME
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
