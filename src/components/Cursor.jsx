@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { isTouch, isReduced } from '../hooks'
+import { isReduced } from '../hooks'
 import { focusFX, setFocusTarget } from '../fx'
 
 const SPARK_COLORS = ['#bfe0ff', '#dff3ff', '#9fd4ff', '#7ad0ff']
@@ -22,8 +22,13 @@ export default function Cursor() {
 
   useEffect(() => {
     if (isReduced()) return
-    const touch = isTouch()
-    if (!touch) document.body.classList.add('has-cursor')
+    // Show the full fluid cursor whenever a real pointer (mouse/trackpad)
+    // exists — including touchscreen laptops / 2-in-1s, which a plain
+    // isTouch() check wrongly treats as touch-only. Pure touch devices
+    // (phones/tablets, no fine pointer) get the spark trail instead.
+    const finePointer = matchMedia('(any-hover: hover) and (any-pointer: fine)').matches
+    const touch = !finePointer
+    if (finePointer) document.body.classList.add('has-cursor')
 
     const cv = canvasRef.current
     const ctx = cv.getContext('2d')
