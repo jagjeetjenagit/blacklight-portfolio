@@ -9,13 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@react-three/fiber": "^8.18.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "three": "^0.184.0"
+    "hls.js": "^1.7.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^5.4.11"
+    "@vitejs/plugin-react": "^6.1.2",
+    "vite": "^8.3.5"
   }
 }

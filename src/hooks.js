@@ -1,86 +1,48 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from "react";
 
-export const isTouch = () =>
-  matchMedia('(hover: none), (pointer: coarse)').matches
-export const isReduced = () =>
-  matchMedia('(prefers-reduced-motion: reduce)').matches
-
-/* Adds .in-view once the element scrolls into the viewport */
-export function useReveal() {
-  const ref = useRef(null)
+export function useMedia(query) {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          el.classList.add('in-view')
-          io.disconnect()
-        }
-      },
-      { threshold: 0.18, rootMargin: '0px 0px -6% 0px' },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-  return ref
+    const mq = window.matchMedia(query);
+    const onChange = () => setMatches(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [query]);
+  return matches;
 }
 
-/* Fluid lerp scrolling: wrapper is fixed and translated, body keeps the height */
-export function useSmoothScroll(ref) {
+// Rich media (background/auto-playing previews) only on larger screens without reduced motion.
+export const useRichMedia = () => useMedia("(min-width: 900px) and (prefers-reduced-motion: no-preference)");
+
+// True once the element has scrolled near the viewport.
+export function useInView(margin = "200px") {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
   useEffect(() => {
-    if (isTouch() || isReduced()) {
-      // still feed --scroll so parallax works with native scrolling
-      const onScroll = () =>
-        document.documentElement.style.setProperty('--scroll', String(scrollY))
-      addEventListener('scroll', onScroll, { passive: true })
-      onScroll()
-      return () => removeEventListener('scroll', onScroll)
-    }
-    const el = ref.current
-    document.body.classList.add('js-smooth')
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { rootMargin: margin });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [margin]);
+  return [ref, inView];
+}
 
-    const setH = () => {
-      document.body.style.height = el.getBoundingClientRect().height + 'px'
-    }
-    setH()
-    const ro = new ResizeObserver(setH)
-    ro.observe(el)
-    addEventListener('resize', setH)
-
-    let current = 0
-    let raf
-    const loop = () => {
-      const target = scrollY
-      current += (target - current) * 0.07
-      if (Math.abs(target - current) < 0.05) current = target
-      el.style.transform = `translate3d(0,${-current}px,0)`
-      document.documentElement.style.setProperty('--scroll', current.toFixed(1))
-      raf = requestAnimationFrame(loop)
-    }
-    raf = requestAnimationFrame(loop)
-
-    const onClick = (e) => {
-      const a = e.target.closest('a[href^="#"]')
-      if (!a) return
-      const id = a.getAttribute('href')
-      const t = document.querySelector(id)
-      if (t) {
-        e.preventDefault()
-        const y = t.getBoundingClientRect().top + current - (id === '#top' ? 0 : 40)
-        scrollTo({ top: y, behavior: 'auto' })
-      }
-    }
-    document.addEventListener('click', onClick)
-
-    return () => {
-      cancelAnimationFrame(raf)
-      ro.disconnect()
-      removeEventListener('resize', setH)
-      document.removeEventListener('click', onClick)
-      document.body.classList.remove('js-smooth')
-      document.body.style.height = ''
-      el.style.transform = ''
-    }
-  }, [ref])
+// Fades in every [data-reveal] element as it scrolls into view.
+export function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll("[data-reveal]");
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        }),
+      { rootMargin: "0px 0px -8% 0px" }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
 }

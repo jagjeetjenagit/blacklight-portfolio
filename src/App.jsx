@@ -1,56 +1,49 @@
-import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react'
-import { useSmoothScroll, isReduced } from './hooks'
-import { SECONDARY_VIDEOS } from './data/projects'
-import { prefetchSequential } from './preload'
-import Cursor from './components/Cursor'
-
-const Particles = lazy(() => import('./components/Particles'))
-import Preloader from './components/Preloader'
-import Showreel from './components/Showreel'
-import WorkGrid from './components/WorkGrid'
-import { Nav, Hero, Marquee, Services, Stats, Contact, Footer, FloatingCta } from './components/Sections'
+import { useState } from "react";
+import { useReveal } from "./hooks.js";
+import { serviceFor } from "./data/contact.js";
+import Nav from "./components/Nav.jsx";
+import Hero from "./components/Hero.jsx";
+import ProofBar from "./components/ProofBar.jsx";
+import Work from "./components/Work.jsx";
+import Featured from "./components/Featured.jsx";
+import WhyUs from "./components/WhyUs.jsx";
+import Services from "./components/Services.jsx";
+import Process from "./components/Process.jsx";
+import Faq from "./components/Faq.jsx";
+import Contact from "./components/Contact.jsx";
+import Footer from "./components/Footer.jsx";
+import Lightbox from "./components/Lightbox.jsx";
+import StickyCta from "./components/StickyCta.jsx";
 
 export default function App() {
-  const smoothRef = useRef(null)
-  const [, setLoaded] = useState(false)
-  const [particles, setParticles] = useState(false)
-  useSmoothScroll(smoothRef)
+  const [playing, setPlaying] = useState(null);
+  const [interest, setInterest] = useState(null);
+  useReveal();
 
-  useEffect(() => {
-    // keep the magical field on mobile too — it just runs lighter (see Particles)
-    setParticles(!isReduced())
-  }, [])
-
-  const onPreloadComplete = useCallback(() => {
-    document.body.classList.add('loaded')
-    setLoaded(true)
-    // warm the work-grid videos in the background so they're ready on scroll
-    prefetchSequential(SECONDARY_VIDEOS)
-  }, [])
+  // "Want a video like this?" from the player: close it, pre-select the service, jump to the form.
+  const startFrom = (item) => {
+    setPlaying(null);
+    setInterest(serviceFor(item));
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <>
-      <Preloader onComplete={onPreloadComplete} />
-      <Cursor />
-      <div className="ambient" aria-hidden="true" />
-      <div className="vignette" aria-hidden="true" />
-      {particles && (
-        <Suspense fallback={null}>
-          <Particles />
-        </Suspense>
-      )}
       <Nav />
-      <FloatingCta />
-      <div className="smooth" ref={smoothRef}>
-        <Hero />
-        <Marquee />
-        <Showreel />
-        <WorkGrid />
+      <main id="top">
+        <Hero onPlay={setPlaying} />
+        <ProofBar />
+        <Work onPlay={setPlaying} />
+        <Featured onPlay={setPlaying} />
+        <WhyUs />
         <Services />
-        <Stats />
-        <Contact />
-        <Footer />
-      </div>
+        <Process />
+        <Faq />
+        <Contact interest={interest} />
+      </main>
+      <Footer />
+      <StickyCta />
+      <Lightbox item={playing} onClose={() => setPlaying(null)} onStart={startFrom} />
     </>
-  )
+  );
 }
