@@ -9,10 +9,11 @@ createRoot(document.getElementById("root")).render(
   </StrictMode>
 );
 
-// Fade out the preloader from index.html once the page has loaded:
-// shown for at least MIN_MS so it doesn't flash, never longer than MAX_MS.
-const MIN_MS = 900;
-const MAX_MS = 3000;
+// Fade out the preloader from index.html once the app is rendered and the fonts are in
+// (so the headline doesn't jump). Shown long enough for the logo to finish drawing,
+// never longer than MAX_MS. Images and videos keep loading behind the page.
+const MIN_MS = 1500;
+const MAX_MS = 2500;
 const preload = document.getElementById("preload");
 
 if (preload) {
@@ -23,10 +24,9 @@ if (preload) {
     preload.classList.add("done");
     preload.addEventListener("transitionend", () => preload.remove(), { once: true });
   };
-  const started = performance.now();
-  const onReady = () => setTimeout(hide, Math.max(0, MIN_MS - (performance.now() - started)));
+  const elapsed = () => performance.now();
+  const fontsReady = document.fonts?.ready ?? Promise.resolve();
 
-  if (document.readyState === "complete") onReady();
-  else window.addEventListener("load", onReady, { once: true });
-  setTimeout(hide, MAX_MS);
+  fontsReady.then(() => setTimeout(hide, Math.max(0, MIN_MS - elapsed())));
+  setTimeout(hide, Math.max(0, MAX_MS - elapsed()));
 }

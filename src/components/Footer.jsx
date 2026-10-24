@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="foot">
       <div className="wrap foot-inner">
         <a href="#top" className="brand">
-          <img src="./logo.jpg" alt="" width="28" height="28" />
+          <img src="./logo.svg" alt="" width="28" height="28" />
           <span>
             BLACKLIGHT<b>MOTION</b>
           </span>

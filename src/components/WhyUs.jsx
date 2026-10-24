@@ -21,7 +21,7 @@ export default function WhyUs() {
           <span />
           <span className="compare-old">Traditional shoot</span>
           <span className="compare-us">
-            <img src="./logo.jpg" alt="" width="22" height="22" /> Blacklight Motion
+            <img src="./logo.svg" alt="" width="22" height="22" /> Blacklight Motion
           </span>
         </div>
         {ROWS.map((r) => (

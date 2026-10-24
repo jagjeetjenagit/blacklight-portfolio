@@ -314,13 +314,24 @@ h3 { font-weight: 700; letter-spacing: -0.03em; }
   width: min(1120px, 100vw - 32px); max-height: 100vh; overflow: visible;
 }
 .lightbox::backdrop { background: rgb(4 4 10 / 0.9); backdrop-filter: blur(10px); }
-.player { display: grid; place-items: center; }
+.player { position: relative; display: grid; place-items: center; }
 .player video, .player iframe {
   width: 100%; max-height: 82vh; border-radius: 18px; background: #000; border: 1px solid var(--line);
   box-shadow: 0 0 80px rgb(130 90 255 / 0.25);
 }
 .player iframe { aspect-ratio: 16 / 9; height: auto; }
-.player iframe.ig-embed { aspect-ratio: auto; width: min(420px, 100%); height: min(760px, 84vh); max-height: none; background: #fff; }
+.ig-wrap { position: relative; width: min(420px, 100%); height: min(760px, 80vh); border-radius: 18px; overflow: hidden; background: #05060c; border: 1px solid var(--line); }
+.ig-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(6px) brightness(0.55); transform: scale(1.05); }
+.player iframe.ig-embed { position: absolute; inset: 0; aspect-ratio: auto; width: 100%; height: 100%; max-height: none; border: 0; border-radius: 0; box-shadow: none; background: transparent; transition: opacity 0.4s; }
+.ig-wrap.is-loading .ig-embed { opacity: 0; }
+.spinner {
+  position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 0deg, transparent 0 30%, #e05cff 65%, #4fc8ff);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 .player.is-vertical video { width: auto; max-width: 100%; }
 .caption { margin-top: 14px; text-align: center; color: var(--muted); font-size: 14px; }
 .close {
@@ -440,6 +451,8 @@ h3 { font-weight: 700; letter-spacing: -0.03em; }
   .compare-us { justify-content: center; }
   .compare-row .compare-us svg { display: none; }
 
+  .close { position: fixed; top: 12px; right: 12px; z-index: 2; background: rgb(20 20 34 / 0.85); }
+  .lightbox { width: calc(100vw - 24px); }
   .faq-item { padding: 0 18px; }
   .faq-item summary { font-size: 16px; padding: 18px 0; }
 

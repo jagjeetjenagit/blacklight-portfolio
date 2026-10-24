@@ -15,7 +15,7 @@ export default function Nav() {
     <header className={`nav${scrolled ? " is-scrolled" : ""}`}>
       <div className="nav-inner">
         <a href="#top" className="brand" aria-label="Blacklight Motion home">
-          <img src="./logo.jpg" alt="" width="34" height="34" />
+          <img src="./logo.svg" alt="" width="34" height="34" />
           <span>
             BLACKLIGHT<b>MOTION</b>
           </span>

@@ -1,10 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MEDIA, posterOf } from "../data/work.js";
 import Icon from "./Icon.jsx";
 
 export default function Lightbox({ item, onClose, onStart }) {
   const dialogRef = useRef(null);
   const videoRef = useRef(null);
+  // Spinner until the video actually plays (or the embed has loaded).
+  const [loading, setLoading] = useState(true);
+  useEffect(() => setLoading(true), [item]);
 
   // Open / close the native <dialog> to match `item`.
   useEffect(() => {
@@ -53,19 +56,24 @@ export default function Lightbox({ item, onClose, onStart }) {
         <>
           <div className={`player${item.ratio === "9:16" ? " is-vertical" : ""}`}>
             {item.instagram ? (
-              <iframe
-                className="ig-embed"
-                src={`https://www.instagram.com/reel/${item.instagram}/embed/`}
-                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                allowFullScreen
-                title={item.title}
-              />
+              <div className={`ig-wrap${loading ? " is-loading" : ""}`}>
+                <img className="ig-poster" src={posterOf(item)} alt="" />
+                <iframe
+                  className="ig-embed"
+                  src={`https://www.instagram.com/reel/${item.instagram}/embed/`}
+                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  title={item.title}
+                  onLoad={() => setLoading(false)}
+                />
+              </div>
             ) : item.youtube ? (
               <iframe
                 src={`https://www.youtube-nocookie.com/embed/${item.youtube}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
                 allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
                 allowFullScreen
                 title={item.title}
+                onLoad={() => setLoading(false)}
               />
             ) : (
               <video
@@ -76,8 +84,12 @@ export default function Lightbox({ item, onClose, onStart }) {
                 controls
                 autoPlay
                 playsInline
+                onPlaying={() => setLoading(false)}
+                onWaiting={() => setLoading(true)}
+                onCanPlay={() => setLoading(false)}
               />
             )}
+            {loading && <span className="spinner" role="status" aria-label="Loading video" />}
           </div>
           <div className="lightbox-foot">
             <p className="caption">

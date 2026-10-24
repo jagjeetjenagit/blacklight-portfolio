@@ -4,6 +4,9 @@ import Icon from "./Icon.jsx";
 import PlayIcon from "./PlayIcon.jsx";
 import SectionHead from "./SectionHead.jsx";
 
+// These films stream as HLS; start fetching the player as soon as someone reaches for one.
+const prefetchPlayer = () => import("hls.js");
+
 export default function Featured({ onPlay }) {
   return (
     <section id="films" className="wrap section">
@@ -31,7 +34,14 @@ export default function Featured({ onPlay }) {
                 ))}
               </ul>
             </div>
-            <button type="button" className="feature-media" onClick={() => onPlay(item)} aria-label={`Play ${item.title}`}>
+            <button
+              type="button"
+              className="feature-media"
+              onClick={() => onPlay(item)}
+              onPointerEnter={prefetchPlayer}
+              onTouchStart={prefetchPlayer}
+              aria-label={`Play ${item.title}`}
+            >
               <AutoPreview item={item} />
               <PlayIcon className="play-lg" />
             </button>
