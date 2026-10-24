@@ -47,7 +47,6 @@ const REELS = [
   reel("DYVwktKIdOu", "Your love story, like a film", "Couple film", ["films"]),
   reel("DYTg3Z2o3JG", "From lifeless visuals to cinema", "Showreel", ["vfx"], true),
   reel("Dbc6P22SPyP", "AI film moments", "Showreel", ["films"], true),
-  reel("Db-Xv61yTGO", "Hanuman ji · strength and faith", "Devotional", ["films"], true),
 ];
 
 export const LUCKY_NIKKI = {
@@ -123,7 +122,6 @@ export const WORK = [
   { id: "builder", title: "White villas", kind: "Real-estate ad", tags: ["realestate", "ads"], ratio: "16:9", duration: 42, full: "builder.mp4" },
   { id: "ajgar", title: "Yeh Pyaar Nahi, Jaal Tha", kind: "2D vector reel", tags: ["2d", "animation"], ratio: "9:16", duration: 63, full: "ajgar.mp4" },
   { id: "shoes", title: "Shoes", kind: "Product ad", tags: ["ads"], ratio: "16:9", duration: 25, full: "shoes.mp4" },
-  { id: "narsimha", title: "Narsimha", kind: "Short film", tags: ["films"], ratio: "16:9", duration: 70, youtube: "9YObYlArIXM", poster: "https://i.ytimg.com/vi/9YObYlArIXM/maxresdefault.jpg", noPreview: true },
   {
     id: "zigsmotion-teaser",
     title: "ZigsMotion · launch teaser",
