@@ -12,6 +12,8 @@ fs.mkdirSync(outDir, { recursive: true });
 
 let made = 0;
 for (const item of [...WORK, SHOWREEL]) {
+  // Self-hosted items ship their thumbnail in public/thumbs already.
+  if (item.local) continue;
   const res = await fetch(posterOf(item), { headers: { "User-Agent": "Mozilla/5.0" } });
   if (!res.ok) {
     console.warn(`skipped ${item.id}: HTTP ${res.status}`);

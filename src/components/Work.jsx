@@ -7,7 +7,7 @@ import WorkCard from "./WorkCard.jsx";
 const canHover = window.matchMedia("(hover: hover)").matches;
 const isVertical = (w) => w.ratio === "9:16";
 const has = (tag) => (w) => w.tags.includes(tag);
-const isAnimation = (w) => has("3d")(w) || has("2d")(w);
+const isAnimation = (w) => has("3d")(w) || has("2d")(w) || has("motion")(w);
 
 // Within a row: UGC first, then real estate, then everything else (stable sort keeps data order).
 const rank = (w) => (has("ugc")(w) ? 0 : has("realestate")(w) ? 1 : 2);
@@ -17,6 +17,7 @@ const byRank = (a, b) => rank(a) - rank(b);
 const GROUPS = [
   { id: "3d", title: "Pixar-style 3D animation", items: WORK.filter(has("3d")), brand: LUCKY_NIKKI },
   { id: "2d", title: "2D animation", items: WORK.filter(has("2d")) },
+  { id: "motion", title: "Motion design & kinetic typography", items: WORK.filter(has("motion")) },
   { id: "vertical", title: "UGC & Reels", items: WORK.filter((w) => !isAnimation(w) && isVertical(w)) },
   { id: "horizontal", title: "Ads & Films", items: WORK.filter((w) => !isAnimation(w) && !isVertical(w)) },
 ];
@@ -55,7 +56,7 @@ export default function Work({ onPlay }) {
   return (
     <section id="work" className="wrap section">
       <SectionHead eyebrow="Portfolio" title="Every kind of" accent="video.">
-        Animation, UGC, real estate, ads, VFX and films. {canHover ? "Hover to preview, click to watch." : "Swipe through, tap to watch."}
+        Animation, motion design, UGC, real estate, ads, VFX and films. {canHover ? "Hover to preview, click to watch." : "Swipe through, tap to watch."}
       </SectionHead>
 
       <div className="filters" role="group" aria-label="Filter work" data-reveal>

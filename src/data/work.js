@@ -1,6 +1,8 @@
 // All video files are served from zigsmotion.com. To self-host, copy the
 // showcase/ folder into public/showcase and set MEDIA = "./showcase/".
 export const MEDIA = "https://zigsmotion.com/showcase/";
+// Items marked `local: true` are served from public/showcase/ in this repo instead.
+export const LOCAL_MEDIA = "./showcase/";
 
 export const INSTAGRAM = "https://www.instagram.com/blacklightmotion/";
 export const INSTAGRAM_DM = "https://ig.me/m/blacklightmotion";
@@ -9,6 +11,7 @@ export const FILTERS = [
   { id: "all", label: "All" },
   { id: "3d", label: "Pixar-style 3D" },
   { id: "2d", label: "2D animation" },
+  { id: "motion", label: "Motion design" },
   { id: "ugc", label: "UGC" },
   { id: "realestate", label: "Real estate" },
   { id: "ads", label: "Ads" },
@@ -122,6 +125,16 @@ export const WORK = [
   { id: "ajgar", title: "Yeh Pyaar Nahi, Jaal Tha", kind: "2D vector reel", tags: ["2d", "animation"], ratio: "9:16", duration: 63, full: "ajgar.mp4" },
   { id: "shoes", title: "Shoes", kind: "Product ad", tags: ["ads"], ratio: "16:9", duration: 25, full: "shoes.mp4" },
   { id: "narsimha", title: "Narsimha", kind: "Short film", tags: ["films"], ratio: "16:9", duration: 70, youtube: "9YObYlArIXM", poster: "https://i.ytimg.com/vi/9YObYlArIXM/maxresdefault.jpg", noPreview: true },
+  {
+    id: "zigsmotion-teaser",
+    title: "ZigsMotion · launch teaser",
+    kind: "Kinetic typography",
+    tags: ["motion"],
+    ratio: "9:16",
+    duration: 26,
+    full: "zigsmotion-teaser.mp4",
+    local: true,
+  },
   { id: "singing", title: "Midnight song", kind: "Music", tags: ["films"], ratio: "16:9", duration: 13, full: "singing.mp4" },
   ...REELS,
   ...LUCKY_NIKKI_EPISODES,
@@ -132,8 +145,9 @@ const byId = (id) => WORK.find((w) => w.id === id);
 export const HERO_BG = byId("necklace");
 export const FEATURED = [byId("oh-mere-ranjhana"), byId("couple-love")];
 
-export const posterOf = (item) => item.poster || `${MEDIA}${item.id}.jpg`;
+export const mediaOf = (item, file) => (item.local ? LOCAL_MEDIA : MEDIA) + file;
+export const posterOf = (item) => item.poster || mediaOf(item, `${item.id}.jpg`);
 // Small self-hosted WebP made by `npm run thumbs` (scripts/make-thumbs.mjs); used for cards and previews.
 export const thumbOf = (item) => `./thumbs/${item.id}.webp`;
-export const previewOf = (item) => `${MEDIA}${item.id}-preview.mp4`;
+export const previewOf = (item) => mediaOf(item, `${item.id}-preview.mp4`);
 export const formatDuration = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;

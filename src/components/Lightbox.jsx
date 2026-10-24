@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MEDIA, posterOf, thumbOf } from "../data/work.js";
+import { mediaOf, posterOf, thumbOf } from "../data/work.js";
 import Icon from "./Icon.jsx";
 
 export default function Lightbox({ item, onClose, onStart }) {
@@ -22,7 +22,7 @@ export default function Lightbox({ item, onClose, onStart }) {
     if (!item?.hls || !video) return;
 
     // Prefer hls.js (MSE); fall back to native HLS where MSE is missing (e.g. iOS Safari).
-    const src = MEDIA + item.hls;
+    const src = mediaOf(item, item.hls);
     let hls;
     let cancelled = false;
     import("hls.js").then(({ default: Hls }) => {
@@ -79,7 +79,7 @@ export default function Lightbox({ item, onClose, onStart }) {
               <video
                 key={item.id}
                 ref={videoRef}
-                src={item.full ? MEDIA + item.full : undefined}
+                src={item.full ? mediaOf(item, item.full) : undefined}
                 poster={posterOf(item)}
                 controls
                 autoPlay
