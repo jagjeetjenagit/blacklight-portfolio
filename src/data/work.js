@@ -119,7 +119,6 @@ export const WORK = [
   { id: "property", title: "The residence", kind: "Real-estate ad", tags: ["realestate", "ads"], ratio: "16:9", duration: 31, full: "property.mp4" },
   { id: "bairan", title: "Bairan — her reply", kind: "Music video", tags: ["films"], ratio: "16:9", duration: 133, youtube: "HJ4ryCovIBk" },
   { id: "shampoo", title: "Shampoo", kind: "Product ad", tags: ["ads"], ratio: "16:9", duration: 41, full: "shampoo.mp4" },
-  { id: "jai-vijay", title: "Jai Vijay — Ravan Asal Mein Kaun Tha?", kind: "2D animated episode", tags: ["2d", "animation"], ratio: "16:9", duration: 332, youtube: "16m6IBNdtZg", poster: "https://i.ytimg.com/vi/16m6IBNdtZg/maxresdefault.jpg" },
   { id: "vfx-rider-2", title: "Rider of the falls", kind: "VFX", tags: ["vfx"], ratio: "16:9", duration: 15, full: "vfx-rider-2.mp4" },
   { id: "builder", title: "White villas", kind: "Real-estate ad", tags: ["realestate", "ads"], ratio: "16:9", duration: 42, full: "builder.mp4" },
   { id: "ajgar", title: "Yeh Pyaar Nahi, Jaal Tha", kind: "2D vector reel", tags: ["2d", "animation"], ratio: "9:16", duration: 63, full: "ajgar.mp4" },
