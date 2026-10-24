@@ -1,4 +1,4 @@
-import { HERO_BG, posterOf, previewOf } from "../data/work.js";
+import { HERO_BG, previewOf, thumbOf } from "../data/work.js";
 import { useRichMedia } from "../hooks.js";
 import HeroReel from "./HeroReel.jsx";
 import Icon from "./Icon.jsx";
@@ -16,7 +16,7 @@ export default function Hero({ onPlay }) {
     <section className="hero">
       {rich && (
         <div className="hero-bg" aria-hidden="true">
-          <video src={previewOf(HERO_BG)} poster={posterOf(HERO_BG)} muted loop playsInline autoPlay />
+          <video src={previewOf(HERO_BG)} poster={thumbOf(HERO_BG)} muted loop playsInline autoPlay />
         </div>
       )}
 

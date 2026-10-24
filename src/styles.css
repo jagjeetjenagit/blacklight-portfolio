@@ -152,8 +152,12 @@ h3 { font-weight: 700; letter-spacing: -0.03em; }
 .phone-meta { display: grid; justify-items: center; gap: 10px; margin-top: 14px; text-align: center; }
 .phone-caption { font-size: 13px; color: var(--muted); }
 .dots { display: flex; gap: 6px; }
-.dots button { width: 7px; height: 7px; border-radius: 99px; background: rgb(255 255 255 / 0.25); transition: width 0.3s, background 0.3s; }
-.dots button.is-active { width: 22px; background: var(--grad-btn); }
+/* 24px tap area, small visible pill drawn by ::before */
+.dots { gap: 0; }
+.dots button { position: relative; width: 24px; height: 24px; }
+.dots button::before { content: ""; position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; transform: translate(-50%, -50%); border-radius: 99px; background: rgb(255 255 255 / 0.25); transition: width 0.3s, background 0.3s; }
+.dots button.is-active { width: 34px; }
+.dots button.is-active::before { width: 22px; background: var(--grad-btn); }
 
 /* Shared media bits */
 .auto-preview { position: absolute; inset: 0; display: block; }

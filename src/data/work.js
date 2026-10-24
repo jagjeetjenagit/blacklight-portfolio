@@ -133,5 +133,7 @@ export const HERO_BG = byId("necklace");
 export const FEATURED = [byId("oh-mere-ranjhana"), byId("couple-love")];
 
 export const posterOf = (item) => item.poster || `${MEDIA}${item.id}.jpg`;
+// Small self-hosted WebP made by `npm run thumbs` (scripts/make-thumbs.mjs); used for cards and previews.
+export const thumbOf = (item) => `./thumbs/${item.id}.webp`;
 export const previewOf = (item) => `${MEDIA}${item.id}-preview.mp4`;
 export const formatDuration = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;

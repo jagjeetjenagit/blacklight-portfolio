@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { WORK, posterOf, previewOf } from "../data/work.js";
+import { WORK, previewOf, thumbOf } from "../data/work.js";
 import { useMedia } from "../hooks.js";
 import Icon from "./Icon.jsx";
 
@@ -43,8 +43,8 @@ export default function HeroReel({ onPlay }) {
       >
         {SLIDES.map((s, i) => (
           <span key={s.id} className={`slide${i === index ? " is-active" : ""}`} aria-hidden={i !== index}>
-            <img src={posterOf(s)} alt="" loading={i === 0 ? "eager" : "lazy"} />
-            {i === index && !reduced && <video src={previewOf(s)} poster={posterOf(s)} muted loop playsInline autoPlay />}
+            <img src={thumbOf(s)} alt="" loading={i === 0 ? "eager" : "lazy"} fetchPriority={i === 0 ? "high" : "low"} />
+            {i === index && !reduced && <video src={previewOf(s)} poster={thumbOf(s)} muted loop playsInline autoPlay />}
           </span>
         ))}
         <span className="phone-pill">

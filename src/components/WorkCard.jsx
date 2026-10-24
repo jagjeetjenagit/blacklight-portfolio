@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { formatDuration, posterOf, previewOf } from "../data/work.js";
+import { formatDuration, previewOf, thumbOf } from "../data/work.js";
 import Icon from "./Icon.jsx";
 import PlayIcon from "./PlayIcon.jsx";
 
@@ -40,7 +40,7 @@ export default function WorkCard({ item, onPlay }) {
       onMouseEnter={start}
       onMouseLeave={stop}
     >
-      <img src={posterOf(item)} alt={item.title} loading="lazy" decoding="async" />
+      <img src={thumbOf(item)} alt={item.title} loading="lazy" decoding="async" />
       {hovered && <video ref={videoRef} src={previewOf(item)} muted loop playsInline autoPlay onPlaying={onPreviewPlaying} />}
       <span className="card-shade" />
       <PlayIcon className="card-play" />

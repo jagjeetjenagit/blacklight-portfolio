@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MEDIA, posterOf } from "../data/work.js";
+import { MEDIA, posterOf, thumbOf } from "../data/work.js";
 import Icon from "./Icon.jsx";
 
 export default function Lightbox({ item, onClose, onStart }) {
@@ -57,7 +57,7 @@ export default function Lightbox({ item, onClose, onStart }) {
           <div className={`player${item.ratio === "9:16" ? " is-vertical" : ""}`}>
             {item.instagram ? (
               <div className={`ig-wrap${loading ? " is-loading" : ""}`}>
-                <img className="ig-poster" src={posterOf(item)} alt="" />
+                <img className="ig-poster" src={thumbOf(item)} alt="" />
                 <iframe
                   className="ig-embed"
                   src={`https://www.instagram.com/reel/${item.instagram}/embed/`}
