@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
-import { formatDuration, previewOf, thumbOf } from "../data/work.js";
+import { formatDuration, mediaOf, previewOf, thumbOf } from "../data/work.js";
+import { useInView, useMedia } from "../hooks.js";
 import Icon from "./Icon.jsx";
 import PlayIcon from "./PlayIcon.jsx";
 
@@ -11,7 +12,11 @@ export default function WorkCard({ item, onPlay }) {
   // The preview clip is only mounted (and downloaded) after the first hover.
   const [hovered, setHovered] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const hasPreview = canHover && !item.noPreview;
+  const hasPreview = canHover && !item.noPreview && !item.autoplay;
+  // autoplay items loop the full clip silently whenever the card is on screen, on every device.
+  const [inViewRef, inView] = useInView("0px");
+  const reduced = useMedia("(prefers-reduced-motion: reduce)");
+  const autoplay = item.autoplay && inView && !reduced;
 
   const start = () => {
     if (!hasPreview) return;
@@ -34,6 +39,7 @@ export default function WorkCard({ item, onPlay }) {
   return (
     <button
       type="button"
+      ref={inViewRef}
       className={`card${playing ? " is-playing" : ""}${item.contain ? " is-contain" : ""}`}
       style={{ aspectRatio: item.ratio.replace(":", "/") }}
       onClick={() => onPlay(item)}
@@ -41,6 +47,7 @@ export default function WorkCard({ item, onPlay }) {
       onMouseLeave={stop}
     >
       <img src={thumbOf(item)} alt={item.title} loading="lazy" decoding="async" />
+      {autoplay && <video src={mediaOf(item, item.full)} muted loop playsInline autoPlay onPlaying={() => setPlaying(true)} />}
       {hovered && <video ref={videoRef} src={previewOf(item)} muted loop playsInline autoPlay onPlaying={onPreviewPlaying} />}
       <span className="card-shade" />
       <PlayIcon className="card-play" />

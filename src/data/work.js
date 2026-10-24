@@ -131,6 +131,7 @@ export const WORK = [
     duration: 26,
     full: "zigsmotion-teaser.mp4",
     local: true,
+    autoplay: true,
   },
   { id: "singing", title: "Midnight song", kind: "Music", tags: ["films"], ratio: "16:9", duration: 13, full: "singing.mp4" },
   ...REELS,
