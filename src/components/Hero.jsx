@@ -8,8 +8,6 @@ const STATS = [
   { value: "24–72 hrs", label: "typical delivery" },
 ];
 
-const ASSURANCES = ["No shoot, no crew", "Reels, Shorts & YouTube", "Revisions on your notes"];
-
 export default function Hero({ onPlay }) {
   const rich = useRichMedia();
 
@@ -35,10 +33,7 @@ export default function Hero({ onPlay }) {
             <br />
             <span className="grad">made in 72 hours.</span>
           </h1>
-          <p className="lede">
-            Pixar-style animation, UGC ads, product and real-estate videos made with AI and finished by editors. Videos
-            people actually watch till the end, without the cost and wait of a shoot.
-          </p>
+          <p className="lede">Pixar-style animation, UGC and product ads made with AI. No shoot, no crew, no waiting.</p>
           <div className="actions">
             <a href="#contact" className="btn btn-primary btn-lg">
               Get your video made <Icon name="arrow" size={16} />
@@ -47,13 +42,6 @@ export default function Hero({ onPlay }) {
               <Icon name="play" size={14} /> See our work
             </a>
           </div>
-          <ul className="assurances">
-            {ASSURANCES.map((a) => (
-              <li key={a}>
-                <Icon name="check" size={14} /> {a}
-              </li>
-            ))}
-          </ul>
           <ul className="stats">
             {STATS.map((s) => (
               <li key={s.label}>
