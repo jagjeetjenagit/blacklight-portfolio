@@ -16,9 +16,9 @@ const byRank = (a, b) => rank(a) - rank(b);
 // Each group splits into a vertical (9:16) row and a horizontal (16:9) row.
 const GROUPS = [
   { id: "3d", title: "Pixar-style 3D animation", items: WORK.filter(has("3d")), brand: LUCKY_NIKKI },
-  { id: "2d", title: "2D animation", items: WORK.filter(has("2d")) },
-  { id: "motion", title: "Motion design & kinetic typography", items: WORK.filter(has("motion")) },
   { id: "vertical", title: "UGC & Reels", items: WORK.filter((w) => !isAnimation(w) && isVertical(w)) },
+  { id: "motion", title: "Motion design & kinetic typography", items: WORK.filter(has("motion")) },
+  { id: "2d", title: "2D animation", items: WORK.filter(has("2d")) },
   { id: "horizontal", title: "Ads & Films", items: WORK.filter((w) => !isAnimation(w) && !isVertical(w)) },
 ];
 

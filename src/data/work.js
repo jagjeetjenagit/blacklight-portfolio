@@ -10,9 +10,9 @@ export const INSTAGRAM_DM = "https://ig.me/m/blacklightmotion";
 export const FILTERS = [
   { id: "all", label: "All" },
   { id: "3d", label: "Pixar-style 3D" },
-  { id: "2d", label: "2D animation" },
-  { id: "motion", label: "Motion design" },
   { id: "ugc", label: "UGC" },
+  { id: "motion", label: "Motion design" },
+  { id: "2d", label: "2D animation" },
   { id: "realestate", label: "Real estate" },
   { id: "ads", label: "Ads" },
   { id: "vfx", label: "VFX" },
