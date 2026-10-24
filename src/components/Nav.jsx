@@ -24,7 +24,6 @@ export default function Nav() {
           <a href="#work">Work</a>
           <a href="#films">Films</a>
           <a href="#why">Why us</a>
-          <a href="#services">Services</a>
           <a href="#faq">FAQ</a>
         </nav>
         <a href="#contact" className="btn btn-primary btn-sm">

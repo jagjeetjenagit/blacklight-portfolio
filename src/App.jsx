@@ -7,8 +7,6 @@ import ProofBar from "./components/ProofBar.jsx";
 import Work from "./components/Work.jsx";
 import Featured from "./components/Featured.jsx";
 import WhyUs from "./components/WhyUs.jsx";
-import Services from "./components/Services.jsx";
-import Process from "./components/Process.jsx";
 import Faq from "./components/Faq.jsx";
 import Contact from "./components/Contact.jsx";
 import Footer from "./components/Footer.jsx";
@@ -36,8 +34,6 @@ export default function App() {
         <Work onPlay={setPlaying} />
         <Featured onPlay={setPlaying} />
         <WhyUs />
-        <Services />
-        <Process />
         <Faq />
         <Contact interest={interest} />
       </main>

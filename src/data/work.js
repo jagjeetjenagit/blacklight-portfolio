@@ -130,7 +130,6 @@ export const WORK = [
 const byId = (id) => WORK.find((w) => w.id === id);
 
 export const HERO_BG = byId("necklace");
-export const HERO_PHONE = byId("pahadi-girl");
 export const FEATURED = [byId("oh-mere-ranjhana"), byId("couple-love")];
 
 export const posterOf = (item) => item.poster || `${MEDIA}${item.id}.jpg`;

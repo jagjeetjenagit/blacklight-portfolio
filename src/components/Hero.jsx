@@ -1,10 +1,11 @@
-import { HERO_BG, HERO_PHONE, posterOf, previewOf } from "../data/work.js";
+import { HERO_BG, posterOf, previewOf } from "../data/work.js";
 import { useRichMedia } from "../hooks.js";
+import HeroReel from "./HeroReel.jsx";
 import Icon from "./Icon.jsx";
 
 const STATS = [
   { value: "40M+", label: "views on our animation" },
-  { value: "10M+", label: "views on a single episode" },
+  { value: "10M+", label: "views on one episode" },
   { value: "24–72 hrs", label: "typical delivery" },
 ];
 
@@ -13,18 +14,18 @@ export default function Hero({ onPlay }) {
 
   return (
     <section className="hero">
-      <div className="hero-bg" aria-hidden="true">
-        {rich ? (
+      {rich && (
+        <div className="hero-bg" aria-hidden="true">
           <video src={previewOf(HERO_BG)} poster={posterOf(HERO_BG)} muted loop playsInline autoPlay />
-        ) : (
-          <img src={posterOf(HERO_BG)} alt="" />
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="wrap hero-inner">
+        <HeroReel onPlay={onPlay} />
+
         <div className="hero-copy">
           <span className="badge">
-            <i /> AI video studio · 40M+ views and counting
+            <i /> AI video studio · 40M+ views
           </span>
           <h1>
             Videos that
@@ -51,22 +52,6 @@ export default function Hero({ onPlay }) {
             ))}
           </ul>
         </div>
-
-        <button type="button" className="phone" onClick={() => onPlay(HERO_PHONE)} aria-label={`Play ${HERO_PHONE.title}`}>
-          <span className="phone-screen">
-            {rich ? (
-              <video src={previewOf(HERO_PHONE)} poster={posterOf(HERO_PHONE)} muted loop playsInline autoPlay />
-            ) : (
-              <img src={posterOf(HERO_PHONE)} alt="" />
-            )}
-            <span className="phone-pill">
-              <Icon name="play" size={11} /> Tap to watch
-            </span>
-          </span>
-          <span className="phone-caption">
-            {HERO_PHONE.title} — {HERO_PHONE.kind}
-          </span>
-        </button>
       </div>
     </section>
   );

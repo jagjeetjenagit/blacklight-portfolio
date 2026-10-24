@@ -22,8 +22,8 @@ const GROUPS = [
 ];
 
 const ROWS = [
-  { id: "vertical", label: "Vertical · 9:16", test: isVertical },
-  { id: "horizontal", label: "Horizontal · 16:9", test: (w) => !isVertical(w) },
+  { id: "vertical", test: isVertical },
+  { id: "horizontal", test: (w) => !isVertical(w) },
 ];
 
 function BrandBanner({ brand }) {
@@ -76,19 +76,15 @@ export default function Work({ onPlay }) {
         const items = group.items.filter(matches).sort(byRank);
         if (!items.length) return null;
         const rows = ROWS.map((row) => ({ ...row, items: items.filter(row.test) })).filter((row) => row.items.length);
-        const showRowLabels = group.id === "3d" || group.id === "2d";
 
         return (
           <div key={group.id} id={`work-${group.id}`} className="work-group">
             <div className="group-head">
               <h3>{group.title}</h3>
-              {!showRowLabels && <span className="line-eyebrow">{rows[0].id === "vertical" ? "9:16" : "16:9"}</span>}
-              <span className="group-count">{items.length}</span>
             </div>
             {group.brand && <BrandBanner brand={group.brand} />}
             {rows.map((row) => (
               <div key={row.id} className="work-row">
-                {showRowLabels && <p className="line-eyebrow row-label">{row.label}</p>}
                 <div className={`grid grid-${row.id}`}>
                   {row.items.map((item) => (
                     <WorkCard key={item.id} item={item} onPlay={onPlay} />
